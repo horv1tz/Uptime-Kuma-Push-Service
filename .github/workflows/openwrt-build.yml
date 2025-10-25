@@ -16,6 +16,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install Rust toolchain
       uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: mips-unknown-linux-musl
     - name: Install cross
       run: cargo install cross
     - name: Build for OpenWrt (mips-unknown-linux-musl)
