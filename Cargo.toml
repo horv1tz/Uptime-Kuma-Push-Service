@@ -1,0 +1,9 @@
+[package]
+name = "uptime-kuma-push"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time", "signal"] }
+reqwest = "0.11"
+chrono = "0.4"
