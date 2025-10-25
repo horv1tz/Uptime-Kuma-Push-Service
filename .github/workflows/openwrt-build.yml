@@ -17,7 +17,7 @@ jobs:
     - name: Install Rust toolchain
       uses: dtolnay/rust-toolchain@stable
     - name: Install cross
-      run: cargo install cross-rs
+      run: cargo install cross
     - name: Build for OpenWrt (mips-unknown-linux-musl)
       run: cross build --target mips-unknown-linux-musl --release
     - name: Upload artifact
