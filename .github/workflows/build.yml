@@ -27,7 +27,7 @@ jobs:
             force-cross: false
           - target: mips-unknown-linux-musl
             name: uptime-kuma-push-openwrt-mips
-            toolchain: nightly
+            toolchain: nightly-2024-05-21
             force-cross: false
           - target: x86_64-pc-windows-gnu
             name: uptime-kuma-push-windows-amd64
@@ -45,6 +45,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Set OpenSSL ENV for MIPS
+      if: matrix.target == 'mips-unknown-linux-musl'
+      run: |
+        echo "OPENSSL_DIR=/usr/lib" >> $GITHUB_ENV
+        echo "OPENSSL_STATIC=1" >> $GITHUB_ENV
+        echo "MIPS_UNKNOWN_LINUX_MUSL_OPENSSL_LIB_DIR=/usr/lib" >> $GITHUB_ENV
+        echo "MIPS_UNKNOWN_LINUX_MUSL_OPENSSL_INCLUDE_DIR=/usr/include" >> $GITHUB_ENV
 
     - name: Build binary
       uses: houseabsolute/actions-rust-cross@v1
