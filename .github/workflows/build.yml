@@ -1,0 +1,56 @@
+name: Release Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build for ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            name: uptime-kuma-push-linux-amd64
+          - target: aarch64-unknown-linux-gnu
+            name: uptime-kuma-push-linux-arm64
+          - target: mips-unknown-linux-musl
+            name: uptime-kuma-push-openwrt-mips
+          - target: x86_64-pc-windows-gnu
+            name: uptime-kuma-push-windows-amd64
+          - target: x86_64-apple-darwin
+            name: uptime-kuma-push-macos-amd64
+          - target: aarch64-apple-darwin
+            name: uptime-kuma-push-macos-arm64
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build binary
+      uses: cross-rs/cross-action@v0.2.5
+      with:
+        target: ${{ matrix.target }}
+        args: "--release"
+
+    - name: Rename and prepare artifact
+      shell: bash
+      run: |
+        if [[ "${{ matrix.target }}" == *"-windows-"* ]]; then
+          mv target/${{ matrix.target }}/release/uptime-kuma-push.exe ${{ matrix.name }}
+        else
+          mv target/${{ matrix.target }}/release/uptime-kuma-push ${{ matrix.name }}
+        fi
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.name }}
+        path: ${{ matrix.name }}
