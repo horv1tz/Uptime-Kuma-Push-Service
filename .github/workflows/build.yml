@@ -35,7 +35,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Build binary
-      uses: cross-rs/cross-action@v0.2.5
+      uses: rust-embedded/cross-action@v0.2.5
       with:
         target: ${{ matrix.target }}
         args: "--release"
