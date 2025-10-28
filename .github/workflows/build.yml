@@ -19,16 +19,28 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             name: uptime-kuma-push-linux-amd64
+            toolchain: stable
+            force-cross: false
           - target: aarch64-unknown-linux-gnu
             name: uptime-kuma-push-linux-arm64
+            toolchain: stable
+            force-cross: false
           - target: mips-unknown-linux-musl
             name: uptime-kuma-push-openwrt-mips
+            toolchain: nightly
+            force-cross: false
           - target: x86_64-pc-windows-gnu
             name: uptime-kuma-push-windows-amd64
+            toolchain: stable
+            force-cross: false
           - target: x86_64-apple-darwin
             name: uptime-kuma-push-macos-amd64
+            toolchain: stable
+            force-cross: true
           - target: aarch64-apple-darwin
             name: uptime-kuma-push-macos-arm64
+            toolchain: stable
+            force-cross: true
 
     steps:
     - name: Checkout repository
@@ -38,7 +50,9 @@ jobs:
       uses: houseabsolute/actions-rust-cross@v1
       with:
         target: ${{ matrix.target }}
+        toolchain: ${{ matrix.toolchain }}
         args: "--release"
+        force-use-cross: ${{ matrix.force-cross }}
 
     - name: Rename and prepare artifact
       shell: bash
